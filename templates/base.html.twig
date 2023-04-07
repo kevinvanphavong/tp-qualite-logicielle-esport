@@ -7,6 +7,24 @@
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
+            <style>
+                * {
+                    box-sizing: border-box;
+                    margin: 0;
+                    padding: 0;
+                    color: whitesmoke;
+                }
+
+                body {
+                    padding: 2em 0;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    width: 100vw;
+                    background: #151515;
+                }
+            </style>
         {% endblock %}
 
         {% block javascripts %}

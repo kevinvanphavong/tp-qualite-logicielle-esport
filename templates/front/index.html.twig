@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TP - Qualité Logicielle{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{#    <link rel="stylesheet" href="{{ asset('css/style.css') }}">#}
+    <style>
+        h1  {
+            margin: 0 0 3em 0;
+        }
+        .all-games {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            grid-gap: 2em;
+        }
+        .all-games h2 a::before,
+        .all-games h2 a::after {
+            content: "";
+            margin-right: 1em;
+        }
+
+        .all-games h2 a{
+            text-decoration: none;
+            background: whitesmoke;
+            color: #633bde;
+        }
+        .all-games h2 a:hover{
+            background: #cccccc;
+            color: #a386f6;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h1>Welcome to the hood !</h1>
+
+    <div class="all-games">
+        {% for game in allGames %}
+            <h2><a href="{{ path('app_game_show', {'id': game.id}) }}">{{ game.name }}</a></h2>
+        {% endfor %}
+    </div>
+{% endblock %}

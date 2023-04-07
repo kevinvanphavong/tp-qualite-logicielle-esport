@@ -1,0 +1,110 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .ematches {
+            margin: 0 auto;
+            width: 75%;
+        }
+
+        .ematch {
+            background-color: #633bde;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2em 1em;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .ematch h2 {
+            text-align: center;
+            margin-bottom: 0.5em;
+        }
+
+        .ematch table {
+            width: 100%;
+        }
+
+        .ematch table thead tr th,
+        .ematch table tbody tr td {
+            text-align: center;
+            padding: 0.5em;
+            border-radius: 2px;
+        }
+
+        .ematch table thead tr th {
+            background: whitesmoke;
+            color: #3f2098;
+        }
+
+        .ematch table tbody tr td {
+            background: #3f2098;
+        }
+
+        h1 {
+            margin-bottom: 2em;
+        }
+
+        .ematch-actions {
+            position: absolute;
+            top: 1em;
+            right: 0.5em;
+        }
+
+        .btn-edit-action,
+        .btn-delete-action {
+            padding: 0.5em;
+            border-radius: 2px;
+            text-decoration: none;
+        }
+        .btn-edit-action {
+            background: #3f2098;
+        }
+        .btn-delete-action {
+            background: whitesmoke;
+            color: #3f2098;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h1>All the ematches - {{ game.name }}</h1>
+
+    <div class="ematches">
+        {% for ematch in ematches %}
+            <div class="ematch">
+                <div class="ematch-actions">
+                    <a href="{{ path('ematch_edit', {'game_id': game.id, 'ematch_id': ematch.id}) }}" class="btn-edit-action">Edit score</a>
+{#                    <a href="#" class="btn-delete-action">Delete</a>#}
+                </div>
+                <h2>{{ 'e-match #' ~ loop.index }}</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Team</th>
+                            <th>Total points</th>
+                            <th>Total kills</th>
+                            <th>Total deaths</th>
+                            <th>Total assists</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for team in ematch.teams %}
+                            <tr>
+                                <td>{{ team.name }}</td>
+                                <td>{{ '100' }}</td>
+                                <td>{{ '90' }}</td>
+                                <td>{{ '80' }}</td>
+                                <td>{{ '90' }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

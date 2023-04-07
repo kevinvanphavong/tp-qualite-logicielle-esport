@@ -1,0 +1,143 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Game{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        body {
+            grid-gap: 2em;
+            margin: 0 auto;
+            width: 75%;
+        }
+
+        .rankingPlayers,
+        .rankingTeam {
+            width: 100%;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        h1 {
+            color: #633bde;
+            background: whitesmoke;
+        }
+
+        h2 {
+            text-align: center;
+            margin: 0 auto 0.5em;
+            background: #633bde;
+            width: fit-content;
+        }
+
+        h1::before,
+        h1::after,
+        h2::before,
+        h2::after {
+            content: "";
+            padding: 0.2em 1em;
+        }
+
+        table tr th,
+        table tr td {
+            border-radius: 2px;
+            padding: 0.5em;
+            text-align: center;
+        }
+
+        table tr th {
+            background: whitesmoke;
+            color: #3f2098;
+        }
+
+        table tr td {
+            background: #3f2098;
+        }
+
+        .ematches a {
+            position: fixed;
+            top: 1em;
+            right: 1em;
+            color: whitesmoke;
+            background: linear-gradient(45deg, #3f2098, #a386f6);
+            padding: 0.5em;
+            text-decoration: none;
+        }
+
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h1>{{ game.name }}</h1>
+
+    {% dump(teams) %}
+    <div class="rankingPlayers">
+        <table>
+            <thead>
+            <tr>
+                <h2>Ranking players</h2>
+            </tr>
+            <tr>
+                <th>Rank</th>
+                <th>Player</th>
+                <th>Points</th>
+                <th>Kills</th>
+                <th>Deaths</th>
+                <th>Assists</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for player in game.players %}
+                <tr>
+                    <td class="rank-value">{{ loop.index }}</td>
+                    <td class="player-name">{{ player.name }}</td>
+                    <td>{{ '0' }}</td>
+                    <td>{{ '0' }}</td>
+                    <td>{{ '0' }}</td>
+                    <td>{{ '0' }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="rankingTeam">
+        <table>
+            <thead>
+            <tr>
+                <h2>Ranking teams</h2>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <th>Total Points</th>
+                <th>Total Kills</th>
+                <th>Total Deaths</th>
+                <th>Total Assists</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for team in teams %}
+                <tr>
+                    <td>{{ team.name }}</td>
+                    <td>{{ '0' }}</td>
+                    <td>{{ '0' }}</td>
+                    <td>{{ '0' }}</td>
+                    <td>{{ '0' }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="ematches">
+        <a href="{{ path('ematches', {'game_id': game.id}) }}">Go to see ematch</a>
+    </div>
+
+{#    <a href="{{ path('app_game_index') }}">back to list</a>#}
+
+{#    <a href="{{ path('app_game_edit', {'id': game.id}) }}">edit</a>#}
+
+{#    {{ include('game/_delete_form.html.twig') }}#}
+{% endblock %}
