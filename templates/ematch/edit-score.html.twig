@@ -1,0 +1,111 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .teams {
+            width: 75%;
+            margin: 0 auto;
+        }
+
+        .team {
+            width: 100%;
+            border: 1px solid whitesmoke;
+            border-radius: 5px;
+            background: #3f2098;
+            padding: 2em;
+            margin: 1em 0;
+        }
+
+        .team h2 {
+            text-align: center;
+            margin-bottom: 0.5em;
+        }
+
+        .player-score {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            grid-gap: 1em;
+        }
+
+        form .btn {
+            color: #633bde;
+            padding: 0.5em;
+        }
+
+        form input {
+            color: #151515;
+        }
+
+        .player {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .player h3 {
+            align-self: end;
+        }
+
+        .player .form-group {
+            display: flex;
+            flex-direction: column;
+            grid-gap: 0.5em;
+        }
+
+        .player label {
+            text-align: center;
+        }
+
+        .player input {
+            padding: 0.3em 0.5em;
+            text-align: center;
+        }
+
+        .player-score hr {
+            width: 75%;
+            margin: 0 auto;
+        }
+        .player-score hr:last-child {
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h1>{{ 'E-match #' ~ ematch.id ~ ' - Score edition' }}</h1>
+    <p>Coucou</p>
+    <div class="teams">
+    <form action="#">
+        {% for team in teams %}
+            <div class="team">
+                <h2>{{ team.name }}</h2>
+                <div class="player-score">
+                {% for player in team.players %}
+                    <div class="player">
+                        <h3>{{ player.name }}</h3>
+                        <div class="form-group">
+                            <label for="kills">Number of kills ⚔️️</label>
+                            <input type="integer" id="kills">
+                        </div>
+                        <div class="form-group">
+                            <label for="deaths">Number of deaths ☠️</label>
+                            <input type="integer" id="deaths">
+                        </div>
+                        <div class="form-group">
+                            <label for="assists">Number of assists 💪️</label>
+                            <input type="integer" id="assists">
+                        </div>
+                    </div>
+                    <hr>
+{#                    {{ include('score/_form.html.twig') }}#}
+                {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </form>
+    </div>
+{% endblock %}
