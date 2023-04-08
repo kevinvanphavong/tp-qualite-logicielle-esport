@@ -39,6 +39,26 @@ class ScoreRepository extends ServiceEntityRepository
         }
     }
 
+    public function findAllWithRanking()
+    {
+        // select team_id, SUM(total_points) from score where team_id IS NOT NULL group by team_id
+
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT s.team, SUM(s.totalPoints) FROM App\Entity\Score s WHERE s.team IS NOT NULL GROUP BY s.team ORDER BY s.totalPoints DESC'
+        );
+        // select team_id, SUM(total_points) from Score where team_id IS NOT NULL group by team_id ORDER BY SUM(total_points) DESC');
+//        $qb = $this->createQueryBuilder('s');
+//        $qb->select('s.team, SUM(s.totalPoints)')
+//            ->where('s.team IS NOT NULL')
+//            ->groupBy('s.team')
+//            ->orderBy('s.totalPoints', 'DESC')
+        ;
+
+        return $query->getResult();
+
+//        return $qb->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return Score[] Returns an array of Score objects
 //     */

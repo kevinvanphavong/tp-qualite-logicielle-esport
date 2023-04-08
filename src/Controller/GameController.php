@@ -4,7 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Game;
 use App\Form\GameType;
+use App\Helper\PlayerHelper;
+use App\Helper\TeamHelper;
 use App\Repository\GameRepository;
+use App\Repository\ScoreRepository;
+use App\Repository\TeamRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,9 +44,14 @@ class GameController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_game_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'game_show', methods: ['GET'])]
+    #[ParamConverter('game', class: 'App\Entity\Game', options: ['id' => 'id'])]
     public function show(
         Game $game,
+        ScoreRepository $scoreRepository,
+        TeamRepository $teamRepository,
+        TeamHelper $teamHelper,
+        PlayerHelper $playerHelper,
     ): Response {
 
         $players = $game->getPlayers();
@@ -52,10 +61,13 @@ class GameController extends AbstractController
             $teams[$player->getTeam()->getName()] = $player->getTeam();
         }
 
+        $rankedTeams = $teamHelper->getTeamsRankedWithScore($teamRepository->findAll());
+        $rankedPlayers = $playerHelper->getPlayersRankedWithScore($players);
+
         return $this->render('game/show.html.twig', [
             'game' => $game,
-            'players' => $players,
-            'teams' => $teams,
+            'players' => $rankedPlayers,
+            'teams' => $rankedTeams,
         ]);
     }
 

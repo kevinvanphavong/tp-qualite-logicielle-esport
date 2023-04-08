@@ -28,13 +28,14 @@ class Team
     #[ORM\ManyToMany(targetEntity: Ematch::class, mappedBy: 'teams')]
     private Collection $ematches;
 
-    #[ORM\OneToOne(inversedBy: 'team', cascade: ['persist', 'remove'])]
-    private ?Score $score = null;
+    #[ORM\OneToMany(mappedBy: 'team', targetEntity: Score::class)]
+    private Collection $scores;
 
     public function __construct()
     {
         $this->players = new ArrayCollection();
         $this->ematches = new ArrayCollection();
+        $this->scores = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -123,14 +124,32 @@ class Team
         return $this;
     }
 
-    public function getScore(): ?Score
+    /**
+     * @return Collection<int, Score>
+     */
+    public function getScores(): Collection
     {
-        return $this->score;
+        return $this->scores;
     }
 
-    public function setScore(?Score $score): self
+    public function addScore(Score $score): self
     {
-        $this->score = $score;
+        if (!$this->scores->contains($score)) {
+            $this->scores->add($score);
+            $score->setTeam($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScore(Score $score): self
+    {
+        if ($this->scores->removeElement($score)) {
+            // set the owning side to null (unless already changed)
+            if ($score->getTeam() === $this) {
+                $score->setTeam(null);
+            }
+        }
 
         return $this;
     }

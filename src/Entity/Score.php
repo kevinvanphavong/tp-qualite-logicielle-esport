@@ -8,13 +8,20 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ScoreRepository::class)]
 class Score
 {
+    const SCORE_ATTRIBUTES = [
+        'kills',
+        'deaths',
+        'assists',
+        'totalPoints',
+    ];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'scores')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Player $player = null;
 
     #[ORM\ManyToOne(inversedBy: 'scores')]
@@ -22,7 +29,7 @@ class Score
     private ?Ematch $ematch = null;
 
     #[ORM\Column]
-    private ?int $totallPoints = null;
+    private ?int $totalPoints = null;
 
     #[ORM\Column]
     private ?int $numberKills = null;
@@ -33,7 +40,7 @@ class Score
     #[ORM\Column]
     private ?int $numberAssists = null;
 
-    #[ORM\OneToOne(mappedBy: 'score', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'scores')]
     private ?Team $team = null;
 
     public function getId(): ?int
@@ -65,14 +72,14 @@ class Score
         return $this;
     }
 
-    public function getTotallPoints(): ?int
+    public function getTotalPoints(): ?int
     {
-        return $this->totallPoints;
+        return $this->totalPoints;
     }
 
-    public function setTotallPoints(int $totallPoints): self
+    public function setTotalPoints(int $totalPoints): self
     {
-        $this->totallPoints = $totallPoints;
+        $this->totalPoints = $totalPoints;
 
         return $this;
     }
@@ -120,16 +127,6 @@ class Score
 
     public function setTeam(?Team $team): self
     {
-        // unset the owning side of the relation if necessary
-        if ($team === null && $this->team !== null) {
-            $this->team->setScore(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($team !== null && $team->getScore() !== $this) {
-            $team->setScore($this);
-        }
-
         $this->team = $team;
 
         return $this;

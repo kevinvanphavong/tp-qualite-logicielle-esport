@@ -89,14 +89,14 @@
             </tr>
             </thead>
             <tbody>
-            {% for player in game.players %}
+            {% for player in players %}
                 <tr>
                     <td class="rank-value">{{ loop.index }}</td>
                     <td class="player-name">{{ player.name }}</td>
-                    <td>{{ '0' }}</td>
-                    <td>{{ '0' }}</td>
-                    <td>{{ '0' }}</td>
-                    <td>{{ '0' }}</td>
+                    <td>{{ player.totalPoints }}</td>
+                    <td>{{ player.kills }}</td>
+                    <td>{{ player.deaths }}</td>
+                    <td>{{ player.assists }}</td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -121,10 +121,10 @@
             {% for team in teams %}
                 <tr>
                     <td>{{ team.name }}</td>
-                    <td>{{ '0' }}</td>
-                    <td>{{ '0' }}</td>
-                    <td>{{ '0' }}</td>
-                    <td>{{ '0' }}</td>
+                    <td>{{ team.totalPoints }}</td>
+                    <td>{{ team.kills }}</td>
+                    <td>{{ team.deaths }}</td>
+                    <td>{{ team.assists }}</td>
                 </tr>
             {% endfor %}
             </tbody>

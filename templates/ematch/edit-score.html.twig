@@ -5,18 +5,46 @@
 {% block stylesheets %}
     {{ parent() }}
     <style>
+        h1 {
+            margin-bottom: 1em;
+        }
+
+        .btn-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn-actions a {
+            padding: 0.5em 1em;
+            border-radius: 5px;
+            background: whitesmoke;
+            color: #633bde;
+            text-decoration: none;
+        }
+
+        .btn-actions a.btn-submit-score-form {
+            background: #3f2098;
+            color: whitesmoke;
+        }
+
         .teams {
             width: 75%;
             margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            grid-gap: 1.5em;
         }
 
         .team {
-            width: 100%;
+            width: fit-content;
             border: 1px solid whitesmoke;
             border-radius: 5px;
             background: #3f2098;
-            padding: 2em;
-            margin: 1em 0;
+            padding: 1em 2em 2em;
+        }
+
+        .team:nth-child(odd) {
+            background: #633bde;
         }
 
         .team h2 {
@@ -25,10 +53,17 @@
         }
 
         .player-score {
-            width: 100%;
+            width: 700px;
             display: flex;
             flex-direction: column;
             grid-gap: 1em;
+        }
+
+        form {
+            display: flex;
+            overflow: scroll;
+            grid-gap: 1.5em;
+            padding: 2em 0;
         }
 
         form .btn {
@@ -72,40 +107,96 @@
         .player-score hr:last-child {
             display: none;
         }
+
+        .btn-submit {
+            padding: 0.5em 2em;
+            background: #633bde;
+            border: none;
+            float: right;
+        }
     </style>
 {% endblock %}
 
 {% block body %}
     <h1>{{ 'E-match #' ~ ematch.id ~ ' - Score edition' }}</h1>
-    <p>Coucou</p>
     <div class="teams">
-    <form action="#">
+    <div class="btn-actions">
+        <a href="{{ path('ematches', {'game_id': game.id}) }}" class="btn-get-back">Back</a>
+        <a href="#" class="btn-submit-score-form" data-href="{{ path('ematch_edit', {'game_id':game.id, 'ematch_id':ematch.id}) }}">Save</a>
+    </div>
+    <form action="#" method="post">
         {% for team in teams %}
             <div class="team">
-                <h2>{{ team.name }}</h2>
+                <h2>{{ team.name ~ ' - ID : ' ~ team.id }}</h2>
                 <div class="player-score">
                 {% for player in team.players %}
-                    <div class="player">
+                    {% set score = playerScore(player, ematch) %}
+                    <div class="player" data-player-id="{{ player.id }}">
                         <h3>{{ player.name }}</h3>
-                        <div class="form-group">
+                        <div class="form-group form-group-kills player-score{{ player.id }}">
                             <label for="kills">Number of kills ⚔️️</label>
-                            <input type="integer" id="kills">
+                            <input type="number" id="kills" name="kills" value="{{ score ? score.numberKills : 0 }}">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group form-group-deaths player-score-{{ player.id }}">
                             <label for="deaths">Number of deaths ☠️</label>
-                            <input type="integer" id="deaths">
+                            <input type="number" id="deaths" name="deaths" value="{{ score ? score.numberDeaths : 0 }}">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group form-group-assists player-score{{ player.id }}">
                             <label for="assists">Number of assists 💪️</label>
-                            <input type="integer" id="assists">
+                            <input type="number" id="assists" name="assists" value="{{ score ? score.numberAssists : 0 }}">
                         </div>
                     </div>
                     <hr>
-{#                    {{ include('score/_form.html.twig') }}#}
                 {% endfor %}
                 </div>
             </div>
         {% endfor %}
     </form>
+
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        function createTableDataScoreForm(players) {
+            let dataObjectPlayers = {};
+
+            players.forEach(player => {
+                let dataPlayer = {};
+                player.querySelectorAll('input').forEach(input => {
+                    let scoreAttr = input.id
+                    dataPlayer[scoreAttr] = input.value === '' ? 0 : Number(input.value);
+                })
+                dataObjectPlayers[player.dataset.playerId] = dataPlayer;
+            });
+
+            return dataObjectPlayers;
+        }
+
+        document.addEventListener('DOMContentLoaded', (ev) => {
+            const btnSubmit = document.querySelector('.btn-submit-score-form');
+
+            btnSubmit.addEventListener('click', (e) => {
+                e.preventDefault();
+                const players = document.querySelectorAll('.player');
+                const url = btnSubmit.getAttribute('data-href');
+                let inputsData = createTableDataScoreForm(players);
+
+                fetch(url, {
+                    method: 'POST',
+                    body: JSON.stringify(inputsData)
+                })
+                .then(response => response)
+                    .then(data => {
+                        if(data.status === 200) {
+                            location.reload();
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            });
+        })
+    </script>
 {% endblock %}

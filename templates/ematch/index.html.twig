@@ -8,6 +8,17 @@
         .ematches {
             margin: 0 auto;
             width: 75%;
+            display: flex;
+            flex-direction: column;
+            grid-gap: 1em;
+        }
+
+        .btn-actions a {
+            padding: 0.5em 1em;
+            border-radius: 5px;
+            background: whitesmoke;
+            color: #633bde;
+            text-decoration: none;
         }
 
         .ematch {
@@ -15,7 +26,6 @@
             border: 1px solid #ccc;
             border-radius: 3px;
             padding: 2em 1em;
-            margin-bottom: 10px;
             position: relative;
         }
 
@@ -74,10 +84,13 @@
     <h1>All the ematches - {{ game.name }}</h1>
 
     <div class="ematches">
+        <div class="btn-actions">
+            <a href="{{ path('game_show', {'id': game.id}) }}" class="btn-get-back">Back</a>
+        </div>
         {% for ematch in ematches %}
             <div class="ematch">
                 <div class="ematch-actions">
-                    <a href="{{ path('ematch_edit', {'game_id': game.id, 'ematch_id': ematch.id}) }}" class="btn-edit-action">Edit score</a>
+                    <a href="{{ path('ematch_show', {'game_id': game.id, 'ematch_id': ematch.id}) }}" class="btn-edit-action">Edit score</a>
 {#                    <a href="#" class="btn-delete-action">Delete</a>#}
                 </div>
                 <h2>{{ 'e-match #' ~ ematch.id }}</h2>
@@ -93,12 +106,13 @@
                     </thead>
                     <tbody>
                         {% for team in ematch.teams %}
+                            {% set score = teamScore(team, ematch) %}
                             <tr>
                                 <td>{{ team.name }}</td>
-                                <td>{{ '100' }}</td>
-                                <td>{{ '90' }}</td>
-                                <td>{{ '80' }}</td>
-                                <td>{{ '90' }}</td>
+                                <td>{{ score.totalPoints ?? 0 }}</td>
+                                <td>{{ score.kills ?? 0 }}</td>
+                                <td>{{ score.deaths ?? 0 }}</td>
+                                <td>{{ score.assists ?? 0 }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
