@@ -61,7 +61,7 @@ class GameController extends AbstractController
             $teams[$player->getTeam()->getName()] = $player->getTeam();
         }
 
-        $rankedTeams = $teamHelper->getTeamsRankedWithScore($teamRepository->findAll());
+        $rankedTeams = $teamHelper->getTeamsRankedWithScore($teamRepository->findBy(['game' => $game->getId()]));
         $rankedPlayers = $playerHelper->getPlayersRankedWithScore($players);
 
         return $this->render('game/show.html.twig', [

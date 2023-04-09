@@ -77,4 +77,25 @@ class ScoreDataHelper
         $team->addScore($score);
         $this->scoreRepository->save($score, true);
     }
+
+    public function getAllScoreDataByPlayer($player)
+    {
+        $scores = $player->getScores();
+
+        $scoresData = [
+            Score::SCORE_ATTRIBUTES[0] => 0,
+            Score::SCORE_ATTRIBUTES[1] => 0,
+            Score::SCORE_ATTRIBUTES[2] => 0,
+            Score::SCORE_ATTRIBUTES[3] => 0,
+        ];
+
+        foreach ($scores as $score) {
+            $scoresData[Score::SCORE_ATTRIBUTES[0]] += $score->getNumberKills();
+            $scoresData[Score::SCORE_ATTRIBUTES[1]] += $score->getNumberDeaths();
+            $scoresData[Score::SCORE_ATTRIBUTES[2]] += $score->getNumberAssists();
+            $scoresData[Score::SCORE_ATTRIBUTES[3]] += $score->getTotalPoints();
+        }
+
+        return $scoresData;
+    }
 }

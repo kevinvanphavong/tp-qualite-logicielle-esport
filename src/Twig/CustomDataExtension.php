@@ -23,6 +23,7 @@ class CustomDataExtension extends AbstractExtension
             new TwigFunction('getName', array($this, 'getName')),
             new TwigFunction('playerScore', array($this, 'playerScore')),
             new TwigFunction('teamScore', array($this, 'teamScore')),
+            new TwigFunction('playerScoresData', array($this, 'playerScoresData')),
         );
     }
 
@@ -44,6 +45,11 @@ class CustomDataExtension extends AbstractExtension
     public function teamScore($team, $ematch)
     {
         return $this->scoreDataHelper->getTeamScoreForTeam($team, $ematch);
+    }
+
+    public function playerScoresData($player)
+    {
+        return $this->scoreDataHelper->getAllScoreDataByPlayer($player);
     }
 }
 

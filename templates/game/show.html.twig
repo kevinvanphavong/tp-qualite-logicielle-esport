@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Game{% endblock %}
+{% block title %}{{ parent() }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -56,14 +56,28 @@
             background: #3f2098;
         }
 
-        .ematches a {
+        .btn-actions {
             position: fixed;
             top: 1em;
             right: 1em;
-            color: whitesmoke;
+            display: flex;
+            flex-direction: column;
+            grid-gap: 0.5em;
+        }
+
+        .btn-actions a {
+            padding: 0.5em;
+            text-decoration: none;
+        }
+
+        .btn-actions a:nth-child(even) {
             background: linear-gradient(45deg, #3f2098, #a386f6);
             padding: 0.5em;
             text-decoration: none;
+        }
+
+        .btn-actions a:nth-child(odd) {
+            background: linear-gradient(45deg, #a386f6, #3f2098);
         }
 
     </style>
@@ -72,7 +86,6 @@
 {% block body %}
     <h1>{{ game.name }}</h1>
 
-    {% dump(teams) %}
     <div class="rankingPlayers">
         <table>
             <thead>
@@ -82,10 +95,10 @@
             <tr>
                 <th>Rank</th>
                 <th>Player</th>
-                <th>Points</th>
-                <th>Kills</th>
-                <th>Deaths</th>
-                <th>Assists</th>
+                <th>Points 🔱</th>
+                <th>Kills ❤️</th>
+                <th>Deaths 💔</th>
+                <th>Assists ❤️‍🩹</th>
             </tr>
             </thead>
             <tbody>
@@ -110,16 +123,18 @@
                 <h2>Ranking teams</h2>
             </tr>
             <tr>
+                <th>Rank</th>
                 <th>Name</th>
-                <th>Total Points</th>
-                <th>Total Kills</th>
-                <th>Total Deaths</th>
-                <th>Total Assists</th>
+                <th>Points 🔱</th>
+                <th>Kills ❤️</th>
+                <th>Deaths 💔</th>
+                <th>Assists ❤️‍🩹</th>
             </tr>
             </thead>
             <tbody>
             {% for team in teams %}
                 <tr>
+                    <td>{{ loop.index }}</td>
                     <td>{{ team.name }}</td>
                     <td>{{ team.totalPoints }}</td>
                     <td>{{ team.kills }}</td>
@@ -131,8 +146,10 @@
         </table>
     </div>
 
-    <div class="ematches">
-        <a href="{{ path('ematches', {'game_id': game.id}) }}">Go to see ematch</a>
+    <div class="btn-actions">
+        <a href="{{ path('homepage') }}">Back to the hood</a>
+        <a href="{{ path('ematches', {'game_id': game.id}) }}">See ematches</a>
+        <a href="{{ path('teams', {'game_id': game.id}) }}">See teams</a>
     </div>
 
 {#    <a href="{{ path('app_game_index') }}">back to list</a>#}

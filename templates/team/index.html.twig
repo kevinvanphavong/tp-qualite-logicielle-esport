@@ -1,0 +1,268 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .teams {
+            display: flex;
+            flex-direction: column;
+            grid-gap: 1em;
+            width: 75%;
+            margin: 0 auto;
+        }
+
+        .team {
+            width: 100%;
+            padding: 1em;
+            border: 1px solid #ccc;
+            display: flex;
+            flex-direction: column;
+            grid-gap: 0.5em;
+        }
+
+        h1 {
+            margin-bottom: 2em;
+        }
+
+        h2 span {
+            font-size: 0.75em;
+        }
+
+        table.player {
+            width: 100%;
+        }
+
+        table.player tr th,
+        table.player tr td {
+            border-radius: 2px;
+            padding: 0.5em;
+            text-align: center;
+            position: relative;
+        }
+
+        table.player tr th {
+            background: whitesmoke;
+            color: #3f2098;
+        }
+
+        table.player tr td {
+            background: #3f2098;
+        }
+
+        .team-title {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn-actions {
+            display: flex;
+            flex-direction: row-reverse;
+            grid-gap: 0.5em;
+        }
+
+        .btn-actions a {
+            padding: 0.5em 1em;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .btn-actions a.add-player {
+            background: #b7263d;
+        }
+        .btn-actions a.submit-players {
+            background: #2c8c34;
+            display: none;
+        }
+        .btn-actions a.submit-players.show {
+            display: flex;
+        }
+
+        .input-player-name {
+            color: #3f2098;
+            width: 80%;
+            float: left;
+            padding: 0.5em;
+            border-radius: 5px;
+        }
+
+        .input-player-name+a:hover {
+            cursor: pointer;
+        }
+
+        .input-player-name+a {
+            height: 100%;
+            position: absolute;
+            top: 0;
+            display: flex;
+            align-items: center;
+            right: 1em;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h1>All the teams - {{ game.name }}</h1>
+
+    <div class="teams">
+        {% for team in teams %}
+            <div class="team">
+                <div class="team-title">
+                    <h2>{{ team.name }} <span>{{ '(' ~ team.players|length ~ ' players)' }}</span></h2>
+                    <div class="btn-actions">
+                        <a href="#" class="add-player" data-table-player-id="{{ loop.index }}">Add player</a>
+                        <a href="#" data-href="{{ path('add_players_to_team', {'game_id': game.id, 'team_id': team.id}) }}" class="submit-players" data-table-player-id="{{ loop.index }}">Submit players</a>
+                    </div>
+                </div>
+                <div class="players">
+                    <table class="player" data-table-player-id="{{ loop.index }}" data-table-team-id="{{ team.id }}" data-table-input-increment="0">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Total Points</th>
+                                <th>Total Kills</th>
+                                <th>Total Deaths</th>
+                                <th>Total Assists</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for player in team.players %}
+                                <tr>
+                                    {% set totalScore = playerScoresData(player) %}
+                                    <td>{{ player.name }}</td>
+                                    <td>{{ totalScore.totalPoints }}</td>
+                                    <td>{{ totalScore.kills }}</td>
+                                    <td>{{ totalScore.deaths }}</td>
+                                    <td>{{ totalScore.assists }}</td>
+                                    <td><a href="#" title="{{ 'Delete this player' }}"><i class="fa-solid fa-trash"></i></a></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            setButtonsActions();
+        })
+
+        // #1
+        const setButtonsActions = () => {
+            const addPlayerBtns = document.querySelectorAll('.add-player');
+            const submitPlayersBtns = document.querySelectorAll('.submit-players');
+            addPlayerBtns.forEach(addPlayerButton => {
+                addPlayerButton.addEventListener('click', (e) => {
+                    e.preventDefault()
+
+                    let tablePlayerId = addPlayerButton.getAttribute('data-table-player-id');
+                    let table = document.querySelector(`table[data-table-player-id="${tablePlayerId}"]`);
+
+                    insertInputPlayer(table, createInputPlayer(tablePlayerId));
+                })
+            })
+            submitPlayersBtns.forEach(submitPlayersButton => {
+                submitPlayersButton.addEventListener('click', () => {
+
+                    let tablePlayerId = submitPlayersButton.getAttribute('data-table-player-id');
+                    let table = document.querySelector(`table[data-table-player-id="${tablePlayerId}"]`);
+                    let inputs = table.querySelectorAll('input.input-player-name');
+                    submitPlayers(inputs, submitPlayersButton.dataset.href)
+                    console.log(inputs.length)
+                })
+            })
+        }
+
+        // #2
+        const createInputPlayer = (tablePlayerId) => {
+            let input = document.createElement('input');
+            input.setAttribute('type', 'text');
+            input.className = 'input-player-name';
+            input.setAttribute('name', `player_name_${tablePlayerId}`);
+            input.setAttribute('placeholder', 'Player name');
+            input.setAttribute('required', 'required');
+
+            return input;
+        }
+
+        // #3
+        const insertInputPlayer = (table, input) => {
+            let submitButton = table.parentNode.parentNode.querySelector('.submit-players');
+            let iconButton = createDeleteInputPlayerLogo();
+            let colspanLength = table.querySelectorAll('tr>td').length;
+            let tbody = table.querySelector('tbody');
+            let tr = document.createElement('tr');
+            let td = document.createElement('td');
+            td.setAttribute('colspan', colspanLength);
+            td.appendChild(input);
+            td.appendChild(iconButton);
+            tr.appendChild(td);
+            tbody.appendChild(tr);
+            table.dataset.tableInputIncrement = parseInt(table.dataset.tableInputIncrement) + 1;
+            console.log(table.dataset.tableInputIncrement)
+            toggleSubmitButton(table, submitButton);
+            addActionDeleteInputPlayer(iconButton, table, tbody, tr, submitButton);
+        }
+
+        // #4
+        const createDeleteInputPlayerLogo = () => {
+            let button = document.createElement('a');
+            let icon = document.createElement('i');
+            icon.className = 'fa-solid fa-delete-left fa-xl'
+            button.appendChild(icon);
+
+            return button;
+        }
+
+        // #5
+        const addActionDeleteInputPlayer = (iconButton, table, tbody, tr, submitButton) => {
+            iconButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                deleteInputPlayer(table, tbody, tr, submitButton);
+            })
+        }
+
+        // #6
+        const deleteInputPlayer = (table, tbody, tr, submitButton) => {
+            table.dataset.tableInputIncrement = parseInt(table.dataset.tableInputIncrement) - 1;
+            toggleSubmitButton(table, submitButton);
+            // console.log(table.dataset.tableInputIncrement)
+            tbody.removeChild(tr);
+        }
+
+        // in#6 & in#3
+        const toggleSubmitButton = (table, submitButton) => {
+            if(table.dataset.tableInputIncrement > 0) {
+                submitButton.classList.add('show');
+            } else {
+                submitButton.classList.remove('show');
+            }
+        }
+
+        // #7
+        const submitPlayers = (inputs, href) => {
+            let dataInputs = [];
+            inputs.forEach(input => {
+                dataInputs.push(input.value);
+            })
+
+            console.log(dataInputs);
+            fetch(href, {
+                method: 'POST',
+                body: JSON.stringify(dataInputs)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.status === 200) {
+                    location.reload();
+                }
+            })
+        }
+    </script>
+{% endblock %}
