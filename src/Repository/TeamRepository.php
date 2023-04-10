@@ -31,8 +31,11 @@ class TeamRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Team $entity, bool $flush = false): void
+    public function remove(int|Team $entity, bool $flush = false): void
     {
+        if(is_int($entity)) {
+            $entity = $this->find($entity);
+        }
         $this->getEntityManager()->remove($entity);
 
         if ($flush) {

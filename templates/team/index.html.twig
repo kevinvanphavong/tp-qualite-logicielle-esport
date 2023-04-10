@@ -41,7 +41,6 @@
             padding: 0.5em 1em;
             border-radius: 5px;
             text-decoration: none;
-            margin-bottom: 0.5em;
         }
 
         .actions .btn-get-back {
@@ -49,8 +48,49 @@
             color: #633bde;
         }
 
-        .actions .btn-add-team {
+        .actions .sub-actions {
+            display: flex;
+            grid-gap: 0.5em
+        }
+
+        .actions .sub-actions a.btn-add-team {
+            background: green;
+        }
+
+        .actions .sub-actions a.btn-submit-teams {
             background: #633bde;
+            display: none;
+        }
+
+        .actions .sub-actions a.btn-submit-teams.show {
+            display: flex;
+        }
+
+        .inputs-team {
+            width: 75%;
+            margin: 0.5em auto;
+            display: flex;
+            flex-direction: column;
+            grid-gap: 0.1em;
+        }
+
+        .inputs-team .input-team-name-line {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .inputs-team .input-team-name-line i {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .inputs-team .input-team-name-line input {
+            width: 90%;
+            padding: 0.5em;
+            border-radius: 5px;
+            color: #3f2098;
         }
 
         table.player {
@@ -76,8 +116,9 @@
 
         .team-title {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             flex-wrap: wrap;
+            justify-content: space-between;
             grid-gap: 0.5em;
         }
 
@@ -87,7 +128,6 @@
 
         .btn-actions {
             display: flex;
-            flex-direction: row-reverse;
             grid-gap: 0.5em;
             flex-wrap: wrap;
         }
@@ -140,15 +180,19 @@
 
     <div class="actions">
         <a href="{{ path('game_show', {'id': game.id}) }}" class="btn-get-back">Back</a>
-        <a href="{{ path('game_show', {'id': game.id}) }}" class="btn-add-team">Add new team</a>
+        <div class="sub-actions">
+            <a href="#" data-href="{{ path('add_teams_to_game', {'game_id': game.id}) }}" class="btn-submit-teams">Submit teams</a>
+            <a href="#" class="btn-add-team">Add new team</a>
+        </div>
     </div>
+    <div class="inputs-team" data-teams-number="0"></div>
     <div class="teams">
         {% for team in teams %}
             <div class="team">
                 <div class="team-title">
                     <h2>{{ team.name }} <span>{{ '(' ~ team.players|length ~ ' players)' }}</span></h2>
                     <div class="btn-actions">
-                        <a href="#" class="delete-team" data-table-player-id="{{ loop.index }}">Delete team</a>
+                        <a href="#" class="delete-team" data-href="{{ path('delete_team_from_game', {'game_id':game.id}) }}" data-team-id="{{ team.id }}">Delete team</a>
                         <a href="#" class="add-player" data-table-player-id="{{ loop.index }}">Add player</a>
                         <a href="#" data-href="{{ path('add_players_to_team', {'game_id': game.id, 'team_id': team.id}) }}" class="submit-players" data-table-player-id="{{ loop.index }}">Submit players</a>
                     </div>
@@ -189,13 +233,90 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             setButtonsActions();
+
+            let btnSubmitTeams = document.querySelector('.btn-submit-teams')
+            let blockInputsTeam = document.querySelector('.inputs-team')
+            createInputTeam(btnSubmitTeams, blockInputsTeam)
+            setSubmitTeamsAction(btnSubmitTeams, blockInputsTeam)
         })
+
+        // #A
+        const createInputTeam = (btnSubmitTeams, blockInputsTeam) => {
+            let btnAddTeam = document.querySelector('.btn-add-team')
+
+            btnAddTeam.addEventListener('click', () => {
+                let divInputTeam = document.createElement('div');
+                let iconDeleteInputTeam = document.createElement('i');
+                let inputTeam = document.createElement('input');
+
+                inputTeam.setAttribute('type', 'text');
+                inputTeam.setAttribute('name', 'team_name');
+                inputTeam.setAttribute('placeholder', 'Team name');
+                inputTeam.setAttribute('class', 'input-team-name');
+                iconDeleteInputTeam.className = 'fa-solid fa-delete-left fa-xl'
+                divInputTeam.className = 'input-team-name-line'
+
+                deleteActionInputTeam(iconDeleteInputTeam, divInputTeam, blockInputsTeam, btnSubmitTeams)
+                insertInputTeam(divInputTeam, inputTeam, iconDeleteInputTeam, blockInputsTeam, btnSubmitTeams)
+            })
+        }
+
+        // #B
+        const deleteActionInputTeam = (iconDeleteInputTeam, divInputTeam, blockInputsTeam, btnSubmitTeams) => {
+            iconDeleteInputTeam.addEventListener('click', () => {
+                blockInputsTeam.dataset.teamsNumber = parseInt(blockInputsTeam.dataset.teamsNumber) - 1;
+                // console.log()
+                if(parseInt(blockInputsTeam.dataset.teamsNumber) === 0){
+                    btnSubmitTeams.classList.remove('show')
+                }
+                divInputTeam.remove();
+            })
+        }
+
+        // #C
+        const insertInputTeam = (divInputTeam, inputTeam, iconDeleteInputTeam, blockInputsTeam, btnSubmitTeams) => {
+            blockInputsTeam.dataset.teamsNumber = parseInt(blockInputsTeam.dataset.teamsNumber) + 1;
+            if(parseInt(blockInputsTeam.dataset.teamsNumber) > 0){
+                btnSubmitTeams.classList.add('show')
+            }
+            divInputTeam.appendChild(inputTeam);
+            divInputTeam.appendChild(iconDeleteInputTeam);
+            blockInputsTeam.appendChild(divInputTeam);
+        }
+
+        // #000
+        const setSubmitTeamsAction = (btnSubmitTeams, blockInputsTeam) => {
+            btnSubmitTeams.addEventListener('click', (e) => {
+                e.preventDefault()
+                let inputs = blockInputsTeam.querySelectorAll('input.input-team-name');
+                let inputsData = [];
+                inputs.forEach(input => {
+                    input.value !== '' ? inputsData.push(input.value) : null
+                })
+
+                fetch(btnSubmitTeams.getAttribute('data-href'), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(inputsData)
+                })
+                    .then(response => response)
+                    .then(data => {
+                        if(data.status === 200) {
+                            location.reload();
+                        }
+                    })
+            })
+        }
 
         // #1
         const setButtonsActions = () => {
             const addPlayerBtns = document.querySelectorAll('.add-player');
             const submitPlayersBtns = document.querySelectorAll('.submit-players');
             const deletePlayerBtns = document.querySelectorAll('.delete-player');
+            const deleteTeamBtns = document.querySelectorAll('.delete-team');
+
             addPlayerBtns.forEach(addPlayerButton => {
                 addPlayerButton.addEventListener('click', (e) => {
                     e.preventDefault()
@@ -219,6 +340,12 @@
                 deletePlayerButton.addEventListener('click', (e) => {
                     e.preventDefault()
                     deletePlayer(deletePlayerButton.dataset.href, deletePlayerButton.dataset.playerId);
+                })
+            })
+            deleteTeamBtns.forEach(deleteTeamButton => {
+                deleteTeamButton.addEventListener('click', (e) => {
+                    e.preventDefault()
+                    deleteTeam(deleteTeamButton.dataset.href, deleteTeamButton.dataset.teamId);
                 })
             })
         }
@@ -312,6 +439,20 @@
             fetch(href, {
                 method: 'POST',
                 body: JSON.stringify(playerId)
+            })
+            .then(response => response)
+            .then(data => {
+                if(data.status === 200) {
+                    location.reload();
+                }
+            })
+        }
+
+        const deleteTeam = (href, teamId) => {
+            console.log(teamId)
+            fetch(href, {
+                method: 'POST',
+                body: JSON.stringify(teamId)
             })
             .then(response => response)
             .then(data => {
