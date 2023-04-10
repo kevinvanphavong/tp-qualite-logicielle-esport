@@ -28,7 +28,7 @@ class TeamController extends AbstractController
         ]);
     }
 
-    #[Route('/game/{game_id}/team/{team_id}', name: 'add_players_to_team', methods: ['post'])]
+    #[Route('/game/{game_id}/team/{team_id}/add-players', name: 'add_players_to_team', methods: ['post'])]
     #[ParamConverter('game', class: 'App\Entity\Game', options: ['id' => 'game_id'])]
     #[ParamConverter('team', class: 'App\Entity\Team', options: ['id' => 'team_id'])]
     public function addPlayersToTeam(Game $game, Team $team, EntityManagerInterface $entityManager, Request $request): Response
@@ -44,12 +44,35 @@ class TeamController extends AbstractController
                 $entityManager->persist($player);
             }
             $entityManager->flush();
-
+            $this->addFlash('success', 'Changes made succesfully');
             return new Response(
                 'Player(s) added succesfully',
                 200
             );
         } catch (\Exception $e) {
+            $this->addFlash('danger', 'Changes not validated - contact admin');
+            return new Response(
+                'Error: ' . $e->getMessage(),
+                500
+            );
+        }
+    }
+
+    #[Route('/game/{game_id}/team/{team_id}/delete-player', name: 'delete_player_from_team', methods: ['post'])]
+    #[ParamConverter('game', class: 'App\Entity\Game', options: ['id' => 'game_id'])]
+    #[ParamConverter('team', class: 'App\Entity\Team', options: ['id' => 'team_id'])]
+    public function deletePlayerFromTeam(Game $game, Team $team, PlayerRepository $playerRepository, Request $request): Response
+    {
+        try {
+            $playerRepository->remove(intval(json_decode($request->getContent())), true);
+
+            $this->addFlash('success', 'Changes made succesfully');
+            return new Response(
+                'Player deleted succesfully',
+                200
+            );
+        } catch (\Exception $e) {
+            $this->addFlash('danger', 'Changes not validated - contact admin');
             return new Response(
                 'Error: ' . $e->getMessage(),
                 500

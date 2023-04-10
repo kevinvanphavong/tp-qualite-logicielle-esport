@@ -29,6 +29,35 @@
                     width: 100vw;
                     background: #151515;
                 }
+                .alert {
+                    position: absolute;
+                    z-index: 100;
+                    top: 1em;
+                    left: 1em;
+                    right: 1em;
+                    padding: 1em;
+                    border-radius: 5px;
+                    opacity: 0;
+                    animation: shadeOutFlashMessage 3s;
+                }
+                .alert-success {
+                    background: green;
+                }
+                .alert-danger {
+                    background: red;
+                }
+
+                @keyframes shadeOutFlashMessage {
+                    0% {
+                        opacity: 1;
+                    }
+                    75% {
+                        opacity: 1;
+                    }
+                    100% {
+                        opacity: 0;
+                    }
+                }
             </style>
         {% endblock %}
 
@@ -37,6 +66,13 @@
         {% endblock %}
     </head>
     <body>
+        {% for category, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
         {% block body %}{% endblock %}
     </body>
 </html>

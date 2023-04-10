@@ -30,14 +30,18 @@ class PlayerRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Player $entity, bool $flush = false): void
+    public function remove(int|Player $entity, bool $flush = false): void
     {
+        if(is_int($entity)) {
+            $entity = $this->find($entity);
+        }
         $this->getEntityManager()->remove($entity);
 
         if ($flush) {
             $this->getEntityManager()->flush();
         }
     }
+
 
 //    /**
 //     * @return Player[] Returns an array of Player objects

@@ -33,16 +33,24 @@
         .actions {
             width: 75%;
             margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .actions a {
+            padding: 0.5em 1em;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-bottom: 0.5em;
         }
 
         .actions .btn-get-back {
-            padding: 0.5em 1em;
-            border-radius: 5px;
             background: whitesmoke;
             color: #633bde;
-            text-decoration: none;
-            margin-bottom: 0.5em;
-            float: left;
+        }
+
+        .actions .btn-add-team {
+            background: #633bde;
         }
 
         table.player {
@@ -94,10 +102,10 @@
             background: #b7263d;
         }
         .btn-actions a.add-player {
-            background: #633bde;
+            background: #2c8c34;
         }
         .btn-actions a.submit-players {
-            background: #2c8c34;
+            background: #633bde;
             display: none;
         }
         .btn-actions a.submit-players.show {
@@ -132,6 +140,7 @@
 
     <div class="actions">
         <a href="{{ path('game_show', {'id': game.id}) }}" class="btn-get-back">Back</a>
+        <a href="{{ path('game_show', {'id': game.id}) }}" class="btn-add-team">Add new team</a>
     </div>
     <div class="teams">
         {% for team in teams %}
