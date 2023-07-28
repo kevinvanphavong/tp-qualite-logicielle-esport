@@ -23,6 +23,7 @@ jobs:
         env:
           MYSQL_USER: esport
           MYSQL_PASSWORD: 11111111
+          MYSQL_ROOT_PASSWORD: 11111111
           MYSQL_DATABASE: app
         ports:
           - 3306:3306
