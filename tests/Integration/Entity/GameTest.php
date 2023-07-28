@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Tests\Entity;
+namespace App\Tests\Integration\Entity;
 
 use App\Entity\Game;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class GameIntegrationTest extends KernelTestCase
+class GameTest extends KernelTestCase
 {
     private $entityManager;
 

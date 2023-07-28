@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Form;
+namespace App\Tests\Integration\Form;
 
 use App\Entity\Game;
 use App\Form\GameType;

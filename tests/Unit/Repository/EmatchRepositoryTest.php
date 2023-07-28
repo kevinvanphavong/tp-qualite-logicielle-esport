@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Entity;
+namespace App\Tests\Unit\Repository;
 
 use App\Entity\Ematch;
 use PHPUnit\Framework\TestCase;

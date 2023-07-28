@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Tests\Entity;
+namespace App\Tests\Integration\Entity;
 
 use App\Entity\Score;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class ScoreIntegrationTest extends KernelTestCase
+class ScoreTest extends KernelTestCase
 {
     private $entityManager;
 

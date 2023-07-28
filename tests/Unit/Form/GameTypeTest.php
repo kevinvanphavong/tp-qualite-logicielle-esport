@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Form;
+namespace App\Tests\Unit\Form;
 
 use App\Form\GameType;
 use Symfony\Component\Form\Test\TypeTestCase;

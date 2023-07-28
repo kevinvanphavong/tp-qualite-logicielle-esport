@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Repository;
+namespace App\Tests\Unit\Repository;
 
 use App\Entity\Game;
 use App\Repository\GameRepository;

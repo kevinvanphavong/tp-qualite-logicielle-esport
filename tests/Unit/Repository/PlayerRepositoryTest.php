@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository;
+namespace App\Tests\Unit\Repository;
 
 use App\Entity\Player;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
