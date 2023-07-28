@@ -25,7 +25,7 @@ jobs:
       with:
         php-version: '8.2'
     - uses: actions/checkout@v3
-    - name: Copy .env
+    - name: Copy .env.local
       run: php -r "file_exists('.env.test.local') || copy('.env.test', '.env.test.local');"
     - name: Cache Composer packages
       id: composer-cache
@@ -45,5 +45,5 @@ jobs:
         touch data/database.sqlite
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       env:
-        DATABASE_URL: sqlite:///%kernel.project_dir%/data/database.sqlite
+        DATABASE_URL: postgresql://app:!ChangeMe!@127.0.0.1:5432/app?serverVersion=15&charset=utf8
       run: vendor/bin/phpunit
