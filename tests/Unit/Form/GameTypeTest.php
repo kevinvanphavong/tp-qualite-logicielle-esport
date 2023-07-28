@@ -6,7 +6,7 @@ use App\Form\GameType;
 use Symfony\Component\Form\Test\TypeTestCase;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class GameTypeTest extends TypeTestCase
+class GameTypeUnitTest extends TypeTestCase
 {
     public function testBuildForm(): void
     {

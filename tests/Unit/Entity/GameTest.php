@@ -8,7 +8,7 @@ use App\Entity\Team;
 use App\Entity\Ematch;
 use PHPUnit\Framework\TestCase;
 
-class GameTest extends TestCase
+class GameUnitTest extends TestCase
 {
     public function testGame(): void
     {

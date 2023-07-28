@@ -7,7 +7,7 @@ use App\Repository\TeamRepository;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 
-class TeamRepositoryTest extends TestCase
+class TeamRepositoryUnitTest extends TestCase
 {
     private $entityManager;
     private $repository;

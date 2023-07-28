@@ -8,7 +8,7 @@ use App\Entity\Team;
 use App\Entity\Score;
 use PHPUnit\Framework\TestCase;
 
-class PlayerTest extends TestCase
+class PlayerUnitTest extends TestCase
 {
     public function testPlayer(): void
     {

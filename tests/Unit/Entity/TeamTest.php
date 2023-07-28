@@ -9,7 +9,7 @@ use App\Entity\Ematch;
 use App\Entity\Score;
 use PHPUnit\Framework\TestCase;
 
-class TeamTest extends TestCase
+class TeamUnitTest extends TestCase
 {
     public function testTeam(): void
     {
