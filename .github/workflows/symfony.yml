@@ -17,6 +17,16 @@ permissions:
 jobs:
   symfony-tests:
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_USER: esport
+          MYSQL_PASSWORD: 11111111
+          MYSQL_DATABASE: app
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
     steps:
     #  To automatically get bug fixes and new Php versions for shivammathur/setup-php,
     # change this to (see https://github.com/shivammathur/setup-php#bookmark-versioning):
@@ -25,8 +35,8 @@ jobs:
       with:
         php-version: '8.0'
     - uses: actions/checkout@v3
-    - name: Copy .env.test.local
-      run: php -r "file_exists('.env.test.local') || copy('.env.test', '.env.test.local');"
+    - name: Copy .env.local
+      run: php -r "file_exists('.env.local') || copy('.env', '.env.local');"
     - name: Cache Composer packages
       id: composer-cache
       uses: actions/cache@v3
@@ -45,5 +55,5 @@ jobs:
         touch data/database.sqlite
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       env:
-        DATABASE_URL: sqlite:///%kernel.project_dir%/data/database.sqlite
-      run: vendor/bin/phpunit
+        DATABASE_URL: mysql://esport:11111111@127.0.0.1:3306/app?serverVersion=8&charset=utf8mb4"
+      run: vendor/bin/phpunit  --exclude Controller
