@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Tests\Entity;
+namespace App\Tests\Integration\Entity;
 
 use App\Entity\Team;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class TeamIntegrationTest extends KernelTestCase
+class TeamTest extends KernelTestCase
 {
     private $entityManager;
 

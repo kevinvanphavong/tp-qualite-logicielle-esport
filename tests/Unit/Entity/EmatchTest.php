@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Entity;
+namespace App\Tests\Unit\Entity;
 
 use App\Entity\Ematch;
 use App\Entity\Game;

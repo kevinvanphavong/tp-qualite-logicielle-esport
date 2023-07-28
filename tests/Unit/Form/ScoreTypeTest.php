@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Tests\Form;
+namespace App\Tests\Unit\Form;
 
 use App\Form\ScoreType;
 use Symfony\Component\Form\Test\TypeTestCase;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class ScoreTypeUnitTest extends TypeTestCase
+class ScoreTypeTest extends TypeTestCase
 {
     public function testBuildForm(): void
     {

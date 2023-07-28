@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Repository;
+namespace App\Tests\Integration\Repository;
 
 use App\Entity\Team;
 use App\Repository\TeamRepository;

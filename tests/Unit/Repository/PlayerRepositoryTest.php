@@ -1,13 +1,15 @@
 <?php
 
-namespace Tests\Repository;
+namespace App\Tests\Unit\Repository;
 
 use App\Entity\Player;
 use App\Repository\PlayerRepository;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManager;
+use Doctrine\Persistence\ManagerRegistry;
 use PHPUnit\Framework\TestCase;
 
-class PlayerRepositoryUnitTest extends TestCase
+class PlayerRepositoryTest extends TestCase
 {
     private $entityManager;
     private $playerRepository;

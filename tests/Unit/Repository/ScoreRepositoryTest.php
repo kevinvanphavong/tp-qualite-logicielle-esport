@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Tests\Repository;
+namespace App\Tests\Unit\Repository;
 
 use App\Entity\Score;
 use App\Repository\ScoreRepository;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 
-class ScoreRepositoryUnitTest extends TestCase
+class ScoreRepositoryTest extends TestCase
 {
     private $entityManager;
     private $repository;

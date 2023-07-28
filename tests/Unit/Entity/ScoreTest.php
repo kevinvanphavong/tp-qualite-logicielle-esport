@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Entity;
+namespace App\Tests\Unit\Entity;
 
 use App\Entity\Score;
 use App\Entity\Player;
@@ -8,7 +8,7 @@ use App\Entity\Ematch;
 use App\Entity\Team;
 use PHPUnit\Framework\TestCase;
 
-class ScoreUnitTest extends TestCase
+class ScoreTest extends TestCase
 {
     public function testScore(): void
     {

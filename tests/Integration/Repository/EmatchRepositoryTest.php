@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Repository;
+namespace App\Tests\Integration\Repository;
 
 use App\Entity\Ematch;
 use App\Repository\EmatchRepository;

@@ -1,13 +1,13 @@
 <?php
 
-namespace Tests\Repository;
+namespace App\Tests\Unit\Repository;
 
 use App\Entity\Game;
 use App\Repository\GameRepository;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 
-class GameRepositoryUnitTest extends TestCase
+class GameRepositoryTest extends TestCase
 {
     private $entityManager;
     private $gameRepository;
