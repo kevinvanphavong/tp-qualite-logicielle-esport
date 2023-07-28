@@ -7,7 +7,7 @@ use App\Repository\GameRepository;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 
-class GameRepositoryTest extends TestCase
+class GameRepositoryUnitTest extends TestCase
 {
     private $entityManager;
     private $gameRepository;

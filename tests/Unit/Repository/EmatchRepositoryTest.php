@@ -5,7 +5,7 @@ namespace Tests\Entity;
 use App\Entity\Ematch;
 use PHPUnit\Framework\TestCase;
 
-class EmatchTest extends TestCase
+class EmatchUnitTest extends TestCase
 {
     public function testAddAndRemoveScore(): void
     {

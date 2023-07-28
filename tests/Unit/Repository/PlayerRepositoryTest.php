@@ -1,70 +1,48 @@
 <?php
 
-namespace App\Repository;
+namespace Tests\Repository;
 
 use App\Entity\Player;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use App\Repository\PlayerRepository;
+use Doctrine\ORM\EntityManager;
+use PHPUnit\Framework\TestCase;
 
-/**
- * @extends ServiceEntityRepository<Player>
- *
- * @method Player|null find($id, $lockMode = null, $lockVersion = null)
- * @method Player|null findOneBy(array $criteria, array $orderBy = null)
- * @method Player[]    findAll()
- * @method Player[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
-class PlayerRepository extends ServiceEntityRepository
+class PlayerRepositoryUnitTest extends TestCase
 {
-    public function __construct(ManagerRegistry $registry)
+    private $entityManager;
+    private $playerRepository;
+
+    protected function setUp(): void
     {
-        parent::__construct($registry, Player::class);
+        $this->entityManager = $this->createMock(EntityManager::class);
+        $this->playerRepository = new PlayerRepository($this->entityManager);
     }
 
-    public function save(Player $entity, bool $flush = false): void
+    public function testSave(): void
     {
-        $this->getEntityManager()->persist($entity);
+        $player = new Player();
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
+        $this->entityManager->expects($this->once())
+            ->method('persist')
+            ->with($player);
+
+        $this->entityManager->expects($this->once())
+            ->method('flush');
+
+        $this->playerRepository->save($player, true);
     }
 
-    public function remove(int|Player $entity, bool $flush = false): void
+    public function testRemove(): void
     {
-        if(is_int($entity)) {
-            $entity = $this->find($entity);
-        }
-        $this->getEntityManager()->remove($entity);
+        $player = new Player();
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
+        $this->entityManager->expects($this->once())
+            ->method('remove')
+            ->with($player);
+
+        $this->entityManager->expects($this->once())
+            ->method('flush');
+
+        $this->playerRepository->remove($player, true);
     }
-
-
-//    /**
-//     * @return Player[] Returns an array of Player objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Player
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

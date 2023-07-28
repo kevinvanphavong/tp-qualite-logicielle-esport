@@ -7,7 +7,7 @@ use App\Repository\ScoreRepository;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 
-class ScoreRepositoryTest extends TestCase
+class ScoreRepositoryUnitTest extends TestCase
 {
     private $entityManager;
     private $repository;
